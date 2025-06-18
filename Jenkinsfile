@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+            maven 'Maven 3.9.10'
+    }
+
     environment {
         DOCKER_IMAGE = 'Notepad:latest'
     }
