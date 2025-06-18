@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'notepad:latest'
+        DOCKER_IMAGE = 'notepad_ck:latest'
     }
 
     stages {
