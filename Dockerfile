@@ -1,24 +1,21 @@
-# Stage 1: Build
-FROM eclipse-temurin:17-alpine AS build
+# Stage 1: Build the JAR from source
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
 
 WORKDIR /app
 
-# Copy JAR from host's target/ directory to container
-COPY target/notepad-0.0.1-SNAPSHOT.jar app.jar
+# Copy the source code and pom.xml
+COPY . .
+
+# Build the JAR
+RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime
 FROM eclipse-temurin:17-jre-alpine
 
-RUN set -eux; \
-    apk add -U --no-cache \
-        curl \
-        git  \
-        make \
-        bash \
-    ;
-
 WORKDIR /app
-COPY --from=build /app/app.jar app.jar
+
+# Copy the built JAR from the build stage
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
