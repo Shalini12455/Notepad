@@ -2,7 +2,9 @@
 FROM eclipse-temurin:17-alpine AS build
 
 WORKDIR /app
-COPY target/notepad-0.0.1-SNAPSHOT.jar notepad-0.0.1-SNAPSHOT.jar
+
+# Copy JAR from host's target/ directory to container
+COPY target/notepad-0.0.1-SNAPSHOT.jar app.jar
 
 # Stage 2: Runtime
 FROM eclipse-temurin:17-jre-alpine
@@ -16,8 +18,8 @@ RUN set -eux; \
     ;
 
 WORKDIR /app
-COPY --from=build /app/notepad-0.0.1-SNAPSHOT.jar notepad-0.0.1-SNAPSHOT.jar
+COPY --from=build /app/app.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "notepad-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
